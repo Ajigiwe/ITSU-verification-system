@@ -6,10 +6,8 @@ A lightweight, mobile-first web system for managing student registration and ver
 
 - **Instant Registration**: Students Scan → Register → Get a Unique Number (#1–350+).
 - **Unique Number Assignment**: Every student gets a specific number for the event.
-- **Fast Entry Verification**: Admin looks up numbers at the entrance to see student details.
-- **Dynamic Capacity**: Admin can change the maximum number of spots directly from the dashboard.
-- **Hidden Admin Access**: Discreet entry point for organizers (no visible buttons).
-- **Data Privacy**: PIN/Passcode protected access to student records.
+- **Fast Entry Verification**: Fast lookup by number to see student details.
+- **Dynamic Capacity**: Adjustable event limits.
 - **Offline-Capable**: Works with browser `localStorage` (no backend required).
 - **Data Export**: Export all registration data to CSV for reporting.
 
@@ -23,9 +21,8 @@ A lightweight, mobile-first web system for managing student registration and ver
 
 2. **Verification (Entrance Side)**:
    - Student shows their assigned number at the entrance.
-   - Admin accesses the dashboard (via the secret trigger).
-   - Admin clicks **"Verify Number"** and types the student's number.
-   - System displays the student's name and index number for confirmation.
+   - Verification is done via the administrative dashboard.
+   - Admin verifies the student's name and index number for confirmation.
 
 ## 🚀 Deployment
 
@@ -34,20 +31,13 @@ A lightweight, mobile-first web system for managing student registration and ver
 2. Settings → Pages → Source: "main branch".
 3. Your site is live!
 
-## 🔒 Admin Access
-
-To maintain a clean look for students, the Admin entrance is hidden:
-- **How to Enter**: Click the large **`#` logo icon** (the gradient square) at the top of the landing page.
-- **Default Passcode**: `vader`
-- **Security**: You can change the passcode in the code by editing the `ADMIN_PIN` variable.
-
 ## 🔧 Customization
 
 ### Change Capacity
-Go to the Admin Dashboard. The **"Total Capacity"** card at the top is editable. Type a new number to instantly change the event limit.
+The system supports dynamic capacity adjustment. You can change the maximum number of spots directly for your event.
 
 ### Reset Database
-In the Admin Dashboard, use the **"Reset Database"** button to wipe all tests/previous registrations and reset the counter back to #1.
+The system allows for a complete database reset to wipe test registrations and start fresh with a counter back to #1.
 
 ## 📊 Technical Stack
 - **React 18**: UI Logic
@@ -58,4 +48,4 @@ In the Admin Dashboard, use the **"Reset Database"** button to wipe all tests/pr
 
 ---
 
-**Tip**: Always perform a "Reset Database" after testing and before your actual event starts! 🎉
+**Tip**: Always perform a database reset after testing and before your actual event starts! 🎉

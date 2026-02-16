@@ -20,25 +20,22 @@ You only need one QR code for this system. Point it to your live URL:
 3. System shows: **"Success! Your number is #24"**.
 4. Student screenshots the page.
 
-### Admin Verification (at the door)
+### Verification (at the door)
 1. Open the URL on your phone/tablet.
-2. **Secret Entrance**: Click the large **`#` logo** at the top.
-3. Enter passcode: `vader`.
-4. Click **Verify Number**.
-5. When a student arrives, enter their number and verify their name.
+2. Access the verification tools as an organizer.
+3. When a student arrives, look up their number and verify their name.
 
 ## 4. Testing Checklist
 - [ ] Register yourself as a test student.
 - [ ] Check if you get #1.
-- [ ] Access Admin (Click the # icon).
-- [ ] Use "Verify Number" to look up yourself.
-- [ ] **Crucial**: Click "Reset Database" at the bottom of Admin to clear your test data before the event starts.
+- [ ] Access verification tools and look up yourself.
+- [ ] **Crucial**: Clear test data before the event starts.
 
 ---
 
 ## Pro-Tips
 - **Lighting**: Ensure your posters have good lighting so QR codes scan easily.
 - **Backup**: Have a printed list of 1-350 as a backup just in case.
-- **Capacity**: Need more than 350 spots? Just change it in the Admin Dashboard!
+- **Capacity**: Need more than 350 spots? Dynamic capacity adjustment is available!
 
 Good luck with your event! 🎓
