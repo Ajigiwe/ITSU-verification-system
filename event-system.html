@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iTSU Event System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1034a6; /* iTSU Dark Blue */
+            --primary-hover: #0c2b8c;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --error: #ef4444;
+            --radius: 0.75rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* ─── UI Layout ─── */
+        .page-wrapper {
+            max-width: 480px;
+            width: calc(100% - 2rem);
+            margin: 3rem auto;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2.25rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        /* ─── Branding Logo (SVG) ─── */
+        .logo-box {
+            width: 100px;
+            height: auto;
+            margin: 0 auto 1.5rem;
+            display: block;
+        }
+
+        /* ─── Typography ─── */
+        h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 0.5rem; color: #0f172a; }
+        p.muted { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; font-weight: 500; }
+
+        /* ─── Components ─── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.15s;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-outline { background: white; border: 1px solid var(--border); color: var(--text-muted); }
+        .btn-outline:hover { background: #f1f5f9; color: var(--text-main); }
+        .btn-danger { background: #fee2e2; color: #b91c1c; }
+
+        .form-group { margin-bottom: 1.25rem; text-align: left; }
+        label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.4rem; color: #475569; text-transform: uppercase; letter-spacing: 0.025em; }
+        
+        input {
+            width: 100%;
+            padding: 0.875rem;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            outline: none;
+            color: #0f172a;
+        }
+        input:focus { border-color: var(--primary); }
+
+        /* ─── Success View Items ─── */
+        .number-display {
+            font-size: 5.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin: 1.5rem 0;
+            line-height: 1;
+            letter-spacing: -0.05em;
+        }
+
+        .summary-box {
+            background: #f8fafc;
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            border: 1px solid #f1f5f9;
+        }
+        .summary-label { font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.15rem; }
+        .summary-val { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.75rem; color: #1e293b; }
+
+        /* ─── Dashboard Items ─── */
+        .dashboard-wrapper { max-width: 1100px; width: calc(100% - 2rem); margin: 2rem auto; animation: fadeIn 0.4s ease-out; }
+        .dashboard-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1.5rem; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; text-align: center; }
+        .stat-card p { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem; }
+        .stat-card h3 { font-size: 2.5rem; font-weight: 900; color: var(--primary); }
+
+        .action-row { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center; }
+        .search-container { flex: 1; min-width: 250px; }
+        
+        .student-item {
+            background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem;
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;
+        }
+        .student-info { display: flex; align-items: center; gap: 1.25rem; }
+        .student-num { font-weight: 900; color: var(--primary); font-size: 1.25rem; width: 3rem; }
+        .student-name { font-weight: 700; font-size: 1.05rem; color: #1e293b; }
+        .student-idx { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+
+        /* ─── Utility ─── */
+        .toast {
+            position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+            background: #0f172a; color: white; padding: 0.8rem 1.5rem; border-radius: 99rem;
+            font-size: 0.9rem; font-weight: 600; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+        @keyframes slideIn { from { transform: translate(-50%, 100%); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+
+        @media (max-width: 640px) {
+            .page-wrapper { margin-top: 2rem; }
+            .dashboard-header { flex-direction: column; align-items: center; text-align: center; }
+            .dashboard-header .btn-group { width: 100%; }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="toast-root"></div>
+    <main id="app-root"></main>
+
+    <!-- ─── Template Component: Logo ─── -->
+    <template id="tmpl-logo">
+        <svg class="logo-box" viewBox="0 0 400 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Shield Shape -->
+            <path d="M40 20C40 20 40 320 200 400C360 320 360 20 360 20H40Z" fill="white" stroke="#1034A6" stroke-width="12"/>
+            <!-- Header Block -->
+            <rect x="52" y="32" width="296" height="70" fill="#1034A6"/>
+            <text x="200" y="85" font-family="Inter, sans-serif" font-weight="900" font-size="54" fill="white" text-anchor="middle">iTSU</text>
+            <!-- Subtitle -->
+            <text x="200" y="118" font-family="Inter, sans-serif" font-weight="700" font-size="10" fill="#1034A6" text-anchor="middle">INFORMATION TECHNOLOGY STUDENTS UNION</text>
+            <!-- Line Chart (Minimalist polyline) -->
+            <path d="M100 200L150 160L200 210L250 170L300 190" stroke="#1034A6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="100" cy="200" r="6" fill="#1034A6"/>
+            <circle cx="150" cy="160" r="6" fill="#10B981"/>
+            <circle cx="200" cy="210" r="6" fill="#3B82F6"/>
+            <circle cx="250" cy="170" r="6" fill="#10B981"/>
+            <circle cx="300" cy="190" r="6" fill="#1034A6"/>
+            <!-- Wave and Group (Network) -->
+            <path d="M60 260Q130 230 200 260T340 260" stroke="#1034A6" stroke-width="4" fill="none"/>
+            <circle cx="175" cy="305" r="18" stroke="#1034A6" stroke-width="4" fill="none"/>
+            <circle cx="225" cy="305" r="18" stroke="#1034A6" stroke-width="4" fill="none"/>
+            <circle cx="175" cy="345" r="18" stroke="#1034A6" stroke-width="4" fill="none"/>
+            <circle cx="225" cy="345" r="18" stroke="#1034A6" stroke-width="4" fill="none"/>
+            <!-- Ribbon Shape (Simplified) -->
+            <path d="M20 380C100 440 300 440 380 380V410C300 460 100 460 20 410V380Z" fill="#1034A6"/>
+            <text x="200" y="425" font-family="Inter, sans-serif" font-weight="800" font-size="14" fill="white" text-anchor="middle">INFORMATION VIA TECHNOLOGY</text>
+        </svg>
+    </template>
+
+    <!-- ─── Template: Registration ─── -->
+    <template id="tmpl-registration">
+        <div class="page-wrapper">
+            <div id="logo-mount"></div>
+            <div class="card">
+                <h1>Event Registration</h1>
+                <p class="muted">ITSU Management Session</p>
+                <div id="spots-count" style="font-size:0.8rem;font-weight:800;color:var(--primary);margin-bottom:1.5rem;background:#f1f5f9;display:inline-block;padding:0.4rem 1rem;border-radius:99rem;"></div>
+                <form id="reg-form">
+                    <div class="form-group">
+                        <label>Student Name</label>
+                        <input type="text" id="name" placeholder="Enter Full Name" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>Index Number</label>
+                        <input type="text" id="index" placeholder="PS/CSC/21/XXXX" required autocomplete="off">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Join Event</button>
+                </form>
+            </div>
+        </div>
+    </template>
+
+    <!-- ─── Template: Success ─── -->
+    <template id="tmpl-success">
+        <div class="page-wrapper">
+            <div id="logo-mount-succ"></div>
+            <div class="card">
+                <div id="s-num" class="number-display">--</div>
+                <h1>Successful</h1>
+                <p class="muted">Your number has been officially assigned.</p>
+                <div class="summary-box">
+                    <p class="summary-label">Name</p><p id="s-name" class="summary-val">--</p>
+                    <p class="summary-label">Index Number</p><p id="s-index" class="summary-val">--</p>
+                </div>
+                <div style="background:#fffcf0;border:1px solid #fef3c7;color:#92400e;padding:1rem;border-radius:0.5rem;font-size:0.85rem;margin-bottom:1.5rem;font-weight:600;">
+                    📸 TAKE A SCREENSHOT<br>Verify your entry at the event door.
+                </div>
+                <button onclick="app.go('registration')" class="btn btn-outline">New Registration</button>
+            </div>
+        </div>
+    </template>
+
+    <!-- ─── Template: Admin Login ─── -->
+    <template id="tmpl-admin-login">
+        <div class="page-wrapper">
+            <div id="logo-mount-login"></div>
+            <div class="card">
+                <h1>iTSU Admin</h1>
+                <p class="muted">Personnel access only.</p>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label>Security PIN</label>
+                        <input type="password" id="pin" placeholder="••••" required style="text-align:center;letter-spacing:1.2em;font-size:1.75rem;">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Authenticate</button>
+                </form>
+                <button onclick="app.go('registration')" class="btn btn-outline" style="border:none;margin-top:1rem;">Back</button>
+            </div>
+        </div>
+    </template>
+
+    <!-- ─── Template: Admin Dashboard ─── -->
+    <template id="tmpl-admin-dashboard">
+        <div class="dashboard-wrapper">
+            <div class="dashboard-header">
+                <div style="display:flex;align-items:center;gap:1rem;text-align:left;">
+                    <div id="logo-mount-dash" style="width:60px;"></div>
+                    <div>
+                        <h1 style="margin:0;">iTSU Dashboard</h1>
+                        <p class="muted" style="margin:0;">Organizers Console</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:0.75rem;" class="btn-group">
+                    <button onclick="app.lookup()" class="btn btn-outline" style="width:auto;">Verify student</button>
+                    <button onclick="app.export()" class="btn btn-outline" style="width:auto;">Export CSV</button>
+                    <button onclick="app.logout()" class="btn btn-outline" style="width:auto;">Logout</button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <p>Total Limit</p>
+                    <input type="number" id="c-limit" class="stat-val" style="width:100%;border:none;background:transparent;text-align:center;" onchange="app.updateCap(this.value)">
+                </div>
+                <div class="stat-card">
+                    <p>Total Registered</p>
+                    <div id="c-reg" class="stat-val">0</div>
+                </div>
+                <div class="stat-card">
+                    <p>Available Spots</p>
+                    <div id="c-avail" class="stat-val">0</div>
+                </div>
+            </div>
+
+            <div class="action-row">
+                <div class="search-container">
+                    <input type="text" id="c-search" placeholder="Search by name, index, or number..." oninput="app.refresh()">
+                </div>
+                <div style="display:flex;gap:0.75rem;">
+                    <select id="c-sort" style="padding:0.875rem;border:1.5px solid var(--border);border-radius:var(--radius);font-weight:700;outline:none;" onchange="app.refresh()">
+                        <option value="num"># Registration</option>
+                        <option value="name">↕ Name</option>
+                    </select>
+                    <button onclick="app.reset()" class="btn btn-danger" style="width:auto;">Reset Master</button>
+                </div>
+            </div>
+
+            <div id="student-list" style="display:flex;flex-direction:column;gap:0.5rem;"></div>
+        </div>
+    </template>
+
+    <script>
+        const PIN = 'vader';
+        let state = { regs: [], cap: 350, authed: sessionStorage.getItem('auth') === 'true' };
+
+        const store = {
+            getRegs: () => JSON.parse(localStorage.getItem('itsu_regs')) || [],
+            saveRegs: (r) => localStorage.setItem('itsu_regs', JSON.stringify(r)),
+            getCap: () => parseInt(localStorage.getItem('itsu_cap')) || 350,
+            saveCap: (c) => localStorage.setItem('itsu_cap', c),
+            add: (d) => {
+                const r = store.getRegs();
+                const c = store.getCap();
+                if (r.length >= c) return { err: 'Maximum capacity reached.' };
+                if (r.find(i => i.idx.toLowerCase() === d.idx.trim().toLowerCase())) return { err: 'Account already exists.' };
+                const nums = new Set(r.map(i => i.num));
+                let n = 1; while (nums.has(n)) n++;
+                const item = { id: crypto.randomUUID(), name: d.name.trim(), idx: d.idx.trim(), num: n, at: new Date().toISOString() };
+                r.push(item);
+                store.saveRegs(r);
+                return item;
+            }
+        };
+
+        let logoClicks = 0;
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.logo-box')) {
+                logoClicks++;
+                if (logoClicks >= 5) {
+                    app.go('admin-login');
+                    logoClicks = 0;
+                }
+            } else {
+                logoClicks = 0;
+            }
+        });
+
+        const app = {
+            init: () => {
+                state.regs = store.getRegs();
+                state.cap = store.getCap();
+                app.go('registration');
+            },
+
+            mountLogo: (id) => {
+                const el = document.getElementById(id);
+                if (el) el.appendChild(document.getElementById('tmpl-logo').content.cloneNode(true));
+            },
+
+            go: (id) => {
+                const root = document.getElementById('app-root');
+                const tmpl = document.getElementById(`tmpl-${id}`);
+                root.innerHTML = '';
+                root.appendChild(tmpl.content.cloneNode(true));
+                
+                if (id === 'registration') {
+                    app.mountLogo('logo-mount');
+                    const c = document.getElementById('spots-count');
+                    const left = state.cap - state.regs.length;
+                    c.innerText = `${left > 0 ? left : 0} Spots Available`;
+                    document.getElementById('reg-form').onsubmit = (e) => {
+                        e.preventDefault();
+                        const res = store.add({ name: document.getElementById('name').value, idx: document.getElementById('index').value });
+                        if (res.err) app.toast(res.err);
+                        else { state.regs = store.getRegs(); app.success(res); }
+                    };
+                }
+                if (id === 'admin-login') {
+                    app.mountLogo('logo-mount-login');
+                    document.getElementById('login-form').onsubmit = (e) => {
+                        e.preventDefault();
+                        if (document.getElementById('pin').value === PIN) {
+                            state.authed = true;
+                            sessionStorage.setItem('auth', 'true');
+                            app.go('admin-dashboard');
+                        } else app.toast('Invalid Authentication');
+                    };
+                }
+                if (id === 'admin-dashboard') {
+                    if (!state.authed) return app.go('admin-login');
+                    app.mountLogo('logo-mount-dash');
+                    document.getElementById('c-limit').value = state.cap;
+                    app.refresh();
+                }
+            },
+
+            success: (d) => {
+                app.go('success');
+                app.mountLogo('logo-mount-succ');
+                document.getElementById('s-num').innerText = d.num;
+                document.getElementById('s-name').innerText = d.name;
+                document.getElementById('s-index').innerText = d.idx;
+            },
+
+            updateCap: (v) => { if (parseInt(v) > 0) { state.cap = v; store.saveCap(v); app.toast('Config Updated'); app.refresh(); }},
+
+            refresh: () => {
+                const q = document.getElementById('c-search').value.toLowerCase();
+                const s = document.getElementById('c-sort').value;
+                const filtered = state.regs.filter(r => r.name.toLowerCase().includes(q) || r.idx.toLowerCase().includes(q) || r.num.toString().includes(q))
+                    .sort((a,b) => s === 'num' ? a.num - b.num : a.name.localeCompare(b.name));
+                
+                document.getElementById('c-reg').innerText = state.regs.length;
+                document.getElementById('c-avail').innerText = Math.max(0, state.cap - state.regs.length);
+                const list = document.getElementById('student-list');
+                if (!filtered.length) { list.innerHTML = '<div style="padding:4rem;color:var(--text-muted);font-weight:700;">No registrations found.</div>'; return; }
+                
+                list.innerHTML = filtered.map(r => `
+                    <div class="student-item">
+                        <div class="student-info">
+                            <span class="student-num">${r.num}</span>
+                            <div style="text-align:left;">
+                                <div class="student-name">${r.name}</div>
+                                <div class="student-idx">${r.idx}</div>
+                            </div>
+                        </div>
+                        <div class="student-idx hidden sm:block">${new Date(r.at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+                    </div>
+                `).join('');
+            },
+
+            lookup: () => {
+                const n = parseInt(prompt("Student Number:"));
+                if (!n) return;
+                const f = state.regs.find(r => r.num === n);
+                if (f) alert(`✅ IDENTIFIED: ${f.name} (${f.idx})`);
+                else alert('❌ RECORD NOT FOUND');
+            },
+
+            export: () => {
+                if (!state.regs.length) return app.toast('Export folder empty');
+                const csv = 'Number,Name,Index,Timestamp\n' + state.regs.sort((a,b)=>a.num-b.num).map(r => `${r.num},"${r.name}","${r.idx}","${r.at}"`).join('\n');
+                const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+                a.download = `itsu_export_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+            },
+
+            reset: () => { if (confirm('Erase all session data permanently?')) { localStorage.removeItem('itsu_regs'); state.regs = []; app.refresh(); app.toast('Database Cleared'); }},
+            logout: () => { sessionStorage.removeItem('auth'); state.authed = false; app.go('registration'); },
+            toast: (m) => {
+                const r = document.getElementById('toast-root');
+                const t = document.createElement('div'); t.className = 'toast'; t.innerText = m;
+                r.appendChild(t); setTimeout(() => t.remove(), 3000);
+            }
+        };
+
+        app.init();
+    </script>
+</body>
+
+</html>
