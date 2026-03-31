@@ -26,10 +26,12 @@ A lightweight, mobile-first web system for managing student registration and ver
 
 ## 🚀 Deployment
 
-### GitHub Pages (Recommended)
-1. Upload `event-system.html` to a GitHub repository.
-2. Settings → Pages → Source: "main branch".
-3. Your site is live!
+## 1. Deploy (1 Minute)
+Upload `index.html` to **GitHub Pages** or **Netlify Drop**.
+
+## 2. Create ONE QR Code
+You only need one QR code for this system. Point it to your live URL:
+- **URL**: `https://your-site.com/index.html`
 
 ## 🔧 Customization
 

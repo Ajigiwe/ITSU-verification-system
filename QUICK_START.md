@@ -1,11 +1,11 @@
 # 🚀 QUICK START GUIDE
 
 ## 1. Deploy (1 Minute)
-Upload `event-system.html` to **GitHub Pages** or **Netlify Drop**.
+Upload `index.html` to **GitHub Pages** or **Netlify Drop**.
 
 ## 2. Create ONE QR Code
 You only need one QR code for this system. Point it to your live URL:
-- **URL**: `https://your-site.com/event-system.html`
+- **URL**: `https://your-site.com/index.html`
 
 **Place this QR code on:**
 - Posters around campus
